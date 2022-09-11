@@ -33,7 +33,9 @@ spec:
               valueFrom:
                 fieldRef:
                 # retrieve pod's name
-                  fieldPath: metadata.name 
+                  fieldPath: metadata.name
+            - name: ORDER_EXPIRE_SECONDS
+              value: '15'
 ---
 apiVersion: v1
 kind: Service
