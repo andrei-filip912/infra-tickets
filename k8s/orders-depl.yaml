@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tickets-depl
+  name: orders-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tickets
+      app: orders
   template:
     metadata:
       labels:
-        app: tickets
+        app: orders
     spec:
       containers:
-        - name: tickets
-          image: af912/tickets-tickets
+        - name: orders
+          image: af912/orders-tickets
           env: 
           # secret env declaration
             - name: JWT_KEY
@@ -24,7 +24,7 @@ spec:
                   key: JWT_KEY
           # plain text env
             - name: MONGO_URI
-              value: mongodb://tickets-mongo-srv:27017/tickets
+              value: mongodb://orders-mongo-srv:27017/orders
             - name: NATS_URL
               value: 'http://nats-srv:4222'
             - name: NATS_CLUSTER_ID
@@ -33,17 +33,19 @@ spec:
               valueFrom:
                 fieldRef:
                 # retrieve pod's name
-                  fieldPath: metadata.name 
+                  fieldPath: metadata.name
+            - name: ORDER_EXPIRE_SECONDS
+              value: '15'
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: tickets-srv
+  name: orders-srv
 spec:
   selector:
-    app: tickets
+    app: orders
   ports:
-    - name: tickets
+    - name: orders
       protocol: TCP
       port: 3000
       targetPort: 3000
